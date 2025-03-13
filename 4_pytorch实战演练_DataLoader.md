@@ -1,26 +1,29 @@
 # DataLoader
 
+> ① Dataset只是去告诉我们程序，我们的数据集在什么位置，数据集第一个数据给它一个索引0，它对应的是哪一个数据。
+>
+> ② Dataloader就是把数据加载到神经网络当中，Dataloader所做的事就是每次从Dataset中取数据，至于怎么取，是由Dataloader中的参数决定的。
+
 ```
 import torchvision.datasets
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 train_data=torchvision.datasets.CIFAR10("./dataset",train=True,transform=torchvision.transforms.ToTensor())
-train_loader=DataLoader(train_data,batch_size=64,shuffle=True,num_workers=0,drop_last=True)
+# batch_size=4 使得 img0, target0 = dataset[0]、img1, target1 = dataset[1]、img2, target2 = dataset[2]、img3, target3 = dataset[3]，然后这四个数据作为Dataloader的一个返回
+train_loader=DataLoader(train_data,batch_size=4,shuffle=True,num_workers=0,drop_last=True)
 
-writer=SummaryWriter("train_data")
+writer=SummaryWriter("train_data_logs")
 for epoch in range(2):
     step=0
     for data in train_loader:
-        imgs,targets=data
+        imgs,targets=data   # 每个data都是由4张图片组成，imgs.size 为 [4,3,32,32]，四张32×32图片三通道，targets由四个标签组成
         writer.add_images("Epoch:{}".format(epoch),imgs,step)
         step+=1
 
 writer.close()
 
 ```
-
-`DataLoader` 是 PyTorch 中用于高效加载数据的核心工具，它在深度学习训练流程中扮演着**数据加载器**的角色。
 
 ------
 

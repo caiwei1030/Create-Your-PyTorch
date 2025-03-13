@@ -8,7 +8,7 @@
 
 ![image-20250305213656131](C:\Users\br\AppData\Roaming\Typora\typora-user-images\image-20250305213656131.png)
 
-- transforms可以看作一个工具箱，其中的一些类可以看作成为一些工具
+- transforms可以看作一个工具箱，其中的一些class类可以看作成为一些工具
 - 现在就是从工具箱中取出工具创建实例，用实例进行transforms
 
 ![image-20250305222442464](C:\Users\br\AppData\Roaming\Typora\typora-user-images\image-20250305222442464.png)
@@ -21,7 +21,7 @@
 from PIL import Image
 
 img = Image.open("image.jpg")
-tensor_img = transforms.ToTensor()(img)  # 输出形状为 [C, H, W]
+tensor_img = transforms.ToTensor((img))  # 输出形状为 [C, H, W]
 ```
 
 **注意事项**：
@@ -29,7 +29,39 @@ tensor_img = transforms.ToTensor()(img)  # 输出形状为 [C, H, W]
 - 输入必须是`PIL.Image`或`numpy.ndarray`（形状为`H×W×C`）。
 - 转换后张量形状为`[通道, 高度, 宽度]`。
 
-## **三、`transforms.Normalize()`**
+> [!NOTE]
+>
+> **为何要使用tensor数据类型？**
+>
+> Tensor有一些属性，比如反向传播、梯度等属性，它包装了神经网络需要的一些属性。
+
+## 三、常见的transforms工具
+
+>  Transforms的工具主要关注他的输入、输出、作用。
+
+### 0、__call__魔术方法使用
+
+```
+class Person:
+    def __call__(self,name):
+        print("__call__ "+"Hello "+name)
+        
+    def hello(self,name):
+        print("hello "+name)
+        
+person = Person()  # 实例化对象
+person("zhangsan") # 调用__call__魔术方法
+person.hello("list") # 调用hello方法
+```
+
+输出结果：
+
+```
+__call__ Hello zhangsan
+hello list
+```
+
+### **1、`transforms.Normalize()`**
 
 **功能**：对张量图像进行归一化（需在`ToTensor()`之后使用）。
 
@@ -48,7 +80,7 @@ normalized_img = transform(tensor_img)  # 输出像素范围可能为负值：
 
 
 
-##  **四、`transforms.Resize()`**
+###  **2、`transforms.Resize()`**
 
 **功能**：调整图像尺寸。
 
@@ -66,7 +98,7 @@ transform = transforms.Resize((224, 224))  # 强制缩放到224x224
 resized_img = transform(img)
 ```
 
-## **五、`transforms.Compose()`**
+### **3、`transforms.Compose()`**
 
 **功能**：将多个图像变换组合成一个顺序执行的流水线。
 
@@ -97,13 +129,13 @@ transform = transforms.Compose([
 
 
 
-## 六、总结
+## 四、总结
 
 - **关注输入输出类型**
 - **多看官方文档**
 - **关注方法需要说明参数**
 
-> **[!NOTE]**
+> [!NOTE]
 >
 > **在不知道返回什么值时候**
 >
